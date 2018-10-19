@@ -84,21 +84,10 @@ public class Crusher {
         response = nonRedirectableClient.newCall(request).execute();
         
         if (response.code() == 302) {
-          System.out.println("STATUS 302. ");
-          System.out.println(response.headers().toMultimap());
-          
           cookies.addAll(nonRedirectableClient.cookieJar().loadForRequest(request.url()));
-          System.out.println(cookies);
-          
-        }
-        else {
-          System.out.println(response.code() + ": " + response.body().string().replace("\n", ""));
-        }
-        
-        if (cookies.stream().noneMatch(cookie -> "cf_clearance".equals(cookie.name()))) {
+        } else {
           return solve();
         }
-        
       }
       
       
@@ -126,7 +115,6 @@ public class Crusher {
     boolean challenge = isCloudflareChallenge(response);
     
     if (challenge && solve) {
-      System.out.println(solve());
       return execute(true, builder);
     }
     
